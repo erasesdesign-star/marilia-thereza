@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Festa de Formatura · Marília Thereza</title>
-<!-- v5 -->
+<!-- v6 -->
 <meta property="og:title" content="Festa de Formatura · Marília Thereza">
 <meta property="og:description" content="Você está convidado! 28/11 às 22h · Castelli Eventos. Toque para abrir.">
 <meta property="og:url" content="https://erasesdesign-star.github.io/marilia-thereza/">
@@ -87,37 +87,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0605;font-family:
 .slide.active img{animation:zoomSlow 7s ease-out forwards}
 @keyframes zoomSlow{0%{transform:scale(1.04)}100%{transform:scale(1.0)}}
 
-/* clip-path reveal */
-.slide .reveal{
-  position:absolute;inset:0;
-  clip-path:circle(0% at 50% 50%);
-}
-.slide.active .reveal{
-  animation:revealClip .55s cubic-bezier(.4,0,.2,1) forwards;
-}
-@keyframes revealClip{
-  0%{clip-path:circle(0% at 50% 50%)}
-  100%{clip-path:circle(150% at 50% 50%)}
-}
-
-/* gold streak */
-.slide .streak{
-  position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:0;
-}
-.slide.active .streak{animation:streakAnim .8s .45s ease-out forwards}
-.streak::after{
-  content:'';position:absolute;top:0;left:-60%;
-  width:40%;height:100%;
-  background:linear-gradient(105deg,transparent 0%,rgba(220,180,80,.18) 50%,transparent 100%);
-  transform:skewX(-15deg);
-}
-@keyframes streakAnim{
-  0%{opacity:1}0.1%{opacity:1}
-  100%{opacity:0}
-}
-.slide.active .streak::after{animation:streakMove .8s .45s ease-out forwards}
-@keyframes streakMove{
-  0%{left:-60%}100%{left:120%}
+/* slide fade-in */
+.slide.active{animation:slideFade .4s ease forwards}
+@keyframes slideFade{
+  0%{opacity:0}
+  100%{opacity:1}
 }
 
 /* ── PROGRESS BARS ── */
@@ -326,12 +300,7 @@ SLIDES.forEach((src, i) => {
   const slide = document.createElement('div');
   slide.className = 'slide';
   slide.id = `slide-${i}`;
-  slide.innerHTML = `
-    <div class="reveal">
-      <img src="${src}" alt="">
-    </div>
-    <div class="streak"></div>
-  `;
+  slide.innerHTML = `<img src="${src}" alt="">`;
   storiesEl.appendChild(slide);
 });
 
@@ -347,11 +316,6 @@ function openEnvelope() {
   envTop.classList.add('show');
   envBottom.classList.add('show');
 
-  // Flash
-  setTimeout(() => {
-    flashEl.classList.add('fire');
-    setTimeout(() => flashEl.classList.remove('fire'), 200);
-  }, 50);
 
   // Music
   music.volume = 0;
@@ -392,6 +356,8 @@ function goTo(idx) {
     if (i < idx) document.getElementById(`fill-${i}`).classList.add('done');
     if (i > idx) { document.getElementById(`fill-${i}`).classList.remove('done'); document.getElementById(`fill-${i}`).style.width = '0%'; }
   });
+  // Force reflow so display:none is committed before display:block + animation
+  void storiesEl.offsetHeight;
   document.getElementById(`slide-${idx}`).classList.add('active');
 
   // Progress
