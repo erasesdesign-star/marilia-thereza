@@ -287,7 +287,7 @@ const SLIDES = [
   'img/pagina7.png', // Direito
   'img/pagina2.png', // Festa Formatura — última antes da confirmação
 ];
-const DURATION = 6500;
+const DURATION = 9000;
 
 let current = 0;
 let timer = null;
@@ -477,6 +477,13 @@ function showFinal() {
   document.getElementById('touch-left').classList.add('hidden');
   document.getElementById('touch-right').classList.add('hidden');
   initParticles();
+  // fade out music
+  let vol = music.volume;
+  const fadeOut = setInterval(() => {
+    vol = Math.max(0, vol - 0.03);
+    music.volume = vol;
+    if (vol <= 0) { music.pause(); clearInterval(fadeOut); }
+  }, 80);
 }
 
 // Particles
