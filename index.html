@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Festa de Formatura · Marília Thereza</title>
+<meta property="og:title" content="Festa de Formatura · Marília Thereza">
+<meta property="og:description" content="Você está convidado! 28/11 às 22h · Castelli Eventos. Toque para abrir.">
+<meta property="og:url" content="https://formatura-marilia-thereza.netlify.app/">
+<meta property="og:image" content="https://formatura-marilia-thereza.netlify.app/og-capa.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0605;font-family:'Cormorant Garamond',serif}
+
+/* ── ENVELOPE SCREEN ── */
+#envelope-screen{
+  position:fixed;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,#1a0c08 0%,#0a0605 70%);
+  z-index:100;cursor:pointer;
+}
+#envelope-wrap{position:relative;width:min(320px,82vw)}
+#envelope-img{width:100%;display:block;border-radius:4px;
+  filter:drop-shadow(0 8px 32px rgba(200,160,60,.35))}
+.seal-pulse{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(80px,20vw);height:min(80px,20vw);border-radius:50%;
+  border:2px solid rgba(220,180,80,.6);
+  animation:sealPulse 2s ease-in-out infinite;
+}
+.seal-pulse:nth-child(2){animation-delay:.7s;opacity:.5}
+@keyframes sealPulse{
+  0%{transform:translate(-50%,-50%) scale(.9);opacity:.8}
+  50%{transform:translate(-50%,-50%) scale(1.35);opacity:0}
+  100%{transform:translate(-50%,-50%) scale(.9);opacity:.8}
+}
+.tap-hint{margin-top:28px;color:rgba(220,180,80,.7);font-size:clamp(13px,3.5vw,16px);
+  letter-spacing:.15em;text-transform:uppercase;animation:blink 2.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ── ENVELOPE OPEN ANIMATION ── */
+#env-top,#env-bottom{
+  position:fixed;left:0;width:100%;height:50%;overflow:hidden;
+  z-index:200;background:#0a0605;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .65s cubic-bezier(.4,0,.2,1);
+}
+#env-top{top:0;transform:translateY(-100%)}
+#env-bottom{bottom:0;transform:translateY(100%)}
+#env-top.show{transform:translateY(0)}
+#env-bottom.show{transform:translateY(0)}
+#env-top img,#env-bottom img{
+  width:min(320px,82vw);display:block;position:absolute
+}
+#env-top{align-items:flex-end}
+#env-top img{top:0}
+#env-bottom img{bottom:0}
+#env-top.open{transform:translateY(-100%)}
+#env-bottom.open{transform:translateY(100%)}
+
+/* ── GOLD FLASH ── */
+#flash{
+  position:fixed;inset:0;background:rgba(220,180,80,0);
+  z-index:190;pointer-events:none;
+  transition:background .15s;
+}
+#flash.fire{background:rgba(220,180,80,.55)}
+
+/* ── STORIES ── */
+#stories{position:fixed;inset:0;z-index:10}
+.slide{
+  position:absolute;inset:0;opacity:0;pointer-events:none;
+  overflow:hidden;
+}
+.slide.active{opacity:1;pointer-events:auto}
+.slide img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transform:scale(1.04);
+  animation:none;
+}
+.slide.active img{animation:zoomSlow 7s ease-out forwards}
+@keyframes zoomSlow{0%{transform:scale(1.04)}100%{transform:scale(1.0)}}
+
+/* clip-path reveal */
+.slide .reveal{
+  position:absolute;inset:0;
+  clip-path:circle(0% at 50% 50%);
+}
+.slide.active .reveal{
+  animation:revealClip .55s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes revealClip{
+  0%{clip-path:circle(0% at 50% 50%)}
+  100%{clip-path:circle(150% at 50% 50%)}
+}
+
+/* gold streak */
+.slide .streak{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:0;
+}
+.slide.active .streak{animation:streakAnim .8s .45s ease-out forwards}
+.streak::after{
+  content:'';position:absolute;top:0;left:-60%;
+  width:40%;height:100%;
+  background:linear-gradient(105deg,transparent 0%,rgba(220,180,80,.18) 50%,transparent 100%);
+  transform:skewX(-15deg);
+}
+@keyframes streakAnim{
+  0%{opacity:1}0.1%{opacity:1}
+  100%{opacity:0}
+}
+.slide.active .streak::after{animation:streakMove .8s .45s ease-out forwards}
+@keyframes streakMove{
+  0%{left:-60%}100%{left:120%}
+}
+
+/* ── PROGRESS BARS ── */
+#progress{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;gap:4px;padding:10px 12px 0;
+}
+.prog-bar{flex:1;height:2.5px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;width:0%;background:#fff;border-radius:2px;transition:none}
+.prog-fill.done{width:100%}
+.prog-fill.active{transition:width linear}
+
+/* ── FINAL SCREEN ── */
+#final{
+  position:fixed;inset:0;z-index:20;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,#1a0a08 0%,#080404 70%);
+  overflow:hidden;
+}
+#final.show{display:flex}
+canvas#particles{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+.final-content{position:relative;z-index:2;text-align:center;padding:0 24px}
+.final-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(13px,3.5vw,16px);
+  color:rgba(220,180,80,.6);
+  letter-spacing:.3em;text-transform:uppercase;
+  margin-bottom:10px;font-style:italic;
+}
+.final-title{
+  font-family:'Cinzel',serif;
+  font-size:clamp(22px,6vw,36px);
+  color:transparent;
+  background:linear-gradient(135deg,#c8a040,#f0d060,#c8a040);
+  -webkit-background-clip:text;background-clip:text;
+  color:#c8a040;
+  letter-spacing:.08em;line-height:1.3;
+  animation:titleGlow 2s ease-in-out infinite alternate;
+  margin-bottom:8px;
+}
+@keyframes titleGlow{
+  0%{text-shadow:0 0 20px rgba(200,160,60,.3)}
+  100%{text-shadow:0 0 40px rgba(200,160,60,.8),0 0 80px rgba(200,160,60,.3)}
+}
+.final-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(15px,4vw,20px);color:rgba(240,210,120,.8);
+  letter-spacing:.12em;margin-bottom:40px;font-style:italic;
+}
+.confirm-label{
+  font-family:'Cinzel',serif;font-size:clamp(12px,3vw,15px);
+  color:rgba(240,210,120,.6);letter-spacing:.2em;
+  text-transform:uppercase;margin-bottom:20px;
+}
+.btn{
+  display:flex;align-items:center;gap:10px;
+  width:min(300px,85vw);padding:16px 24px;margin:8px auto;
+  border:none;border-radius:50px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:clamp(13px,3.5vw,15px);
+  letter-spacing:.1em;font-weight:600;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+}
+.btn:active{transform:scale(.96)}
+.btn-wa{
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(37,211,102,.35);
+  animation:waPulse 2s ease-in-out infinite;
+}
+@keyframes waPulse{
+  0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.35)}
+  50%{box-shadow:0 4px 40px rgba(37,211,102,.65),0 0 60px rgba(37,211,102,.2)}
+}
+.btn-maps{
+  background:rgba(200,160,60,.12);
+  border:1.5px solid rgba(200,160,60,.4);
+  color:rgba(240,210,120,.9);
+}
+.btn svg{width:20px;height:20px;flex-shrink:0}
+
+/* ── SOUND BTN ── */
+#sound-btn{
+  position:fixed;bottom:18px;right:18px;z-index:60;
+  width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(200,160,60,.5);
+  background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;opacity:0;transition:opacity .3s;
+}
+#sound-btn.visible{opacity:1}
+#sound-btn svg{width:18px;height:18px;fill:rgba(220,180,80,.9)}
+
+/* ── TOUCH ZONES ── */
+#touch-left,#touch-right{position:fixed;top:0;bottom:0;z-index:40;width:40%}
+#touch-left{left:0}
+#touch-right{right:0}
+#touch-left.hidden,#touch-right.hidden{display:none}
+</style>
+</head>
+<body>
+
+<!-- ENVELOPE -->
+<div id="envelope-screen">
+  <div id="envelope-wrap">
+    <img id="envelope-img" src="img/pagina1.png" alt="Convite">
+    <div class="seal-pulse"></div>
+    <div class="seal-pulse"></div>
+  </div>
+  <p class="tap-hint">Clique para abrir</p>
+</div>
+
+<!-- ENVELOPE HALVES (opening anim) -->
+<div id="env-top"><img src="img/pagina1.png" alt=""></div>
+<div id="env-bottom"><img src="img/pagina1.png" alt=""></div>
+
+<!-- GOLD FLASH -->
+<div id="flash"></div>
+
+<!-- PROGRESS -->
+<div id="progress"></div>
+
+<!-- STORIES (slides 2–7) -->
+<div id="stories"></div>
+
+<!-- FINAL SCREEN -->
+<div id="final">
+  <canvas id="particles"></canvas>
+  <div class="final-content">
+    <p class="final-name">Marília Thereza</p>
+    <h1 class="final-title">Confirme sua presença</h1>
+    <p class="final-sub">28 de novembro · 22h</p>
+    <p class="confirm-label">Castelli Eventos</p>
+    <a class="btn btn-wa"
+       href="https://wa.me/5534996314183?text=Ol%C3%A1%21+Confirmo+minha+presen%C3%A7a+na+Festa+de+Formatura+da+Mar%C3%ADlia+Thereza%2C+dia+28%2F11+%C3%A0s+22h."
+       target="_blank">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path fill="#fff" d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.112 1.523 5.843L.044 23.267a.75.75 0 0 0 .918.918l5.424-1.479A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.7-.504-5.25-1.385l-.372-.217-3.864 1.053 1.053-3.864-.217-.372A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      Confirmar presença
+    </a>
+    <a class="btn btn-maps"
+       href="https://maps.google.com/?q=Castelli+Eventos+Av.+Lidormira+Borges+do+Nascimento+6000+Uberlandia+MG"
+       target="_blank">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="rgba(220,180,80,.9)" stroke-width="1.8"><path d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      Como chegar
+    </a>
+  </div>
+</div>
+
+<!-- SOUND BTN -->
+<button id="sound-btn" aria-label="Som">
+  <svg id="icon-on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+  <svg id="icon-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+</button>
+
+<!-- TOUCH ZONES -->
+<div id="touch-left"></div>
+<div id="touch-right"></div>
+
+<audio id="music" loop preload="none">
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const SLIDES = [
+  'img/pagina2.png',
+  'img/pagina3.png',
+  'img/pagina4.png',
+  'img/pagina5.png',
+  'img/pagina6.png',
+  'img/pagina7.png',
+];
+const DURATION = 6500;
+
+let current = 0;
+let timer = null;
+let holdTimer = null;
+let holding = false;
+let started = false;
+let elapsed = 0;
+let progStart = null;
+
+const music = document.getElementById('music');
+const soundBtn = document.getElementById('sound-btn');
+const iconOn = document.getElementById('icon-on');
+const iconOff = document.getElementById('icon-off');
+const flashEl = document.getElementById('flash');
+const progressEl = document.getElementById('progress');
+const storiesEl = document.getElementById('stories');
+const finalEl = document.getElementById('final');
+const envScreen = document.getElementById('envelope-screen');
+const envTop = document.getElementById('env-top');
+const envBottom = document.getElementById('env-bottom');
+
+// Build progress bars
+SLIDES.forEach((_, i) => {
+  const bar = document.createElement('div');
+  bar.className = 'prog-bar';
+  const fill = document.createElement('div');
+  fill.className = 'prog-fill';
+  fill.id = `fill-${i}`;
+  bar.appendChild(fill);
+  progressEl.appendChild(bar);
+});
+
+// Build slides
+SLIDES.forEach((src, i) => {
+  const slide = document.createElement('div');
+  slide.className = 'slide';
+  slide.id = `slide-${i}`;
+  slide.innerHTML = `
+    <div class="reveal">
+      <img src="${src}" alt="">
+    </div>
+    <div class="streak"></div>
+  `;
+  storiesEl.appendChild(slide);
+});
+
+// Envelope tap
+envScreen.addEventListener('click', openEnvelope);
+envScreen.addEventListener('touchend', e => { e.preventDefault(); openEnvelope(); }, {passive:false});
+
+function openEnvelope() {
+  if (started) return;
+  started = true;
+
+  // Show envelope halves
+  envTop.classList.add('show');
+  envBottom.classList.add('show');
+
+  // Flash
+  setTimeout(() => {
+    flashEl.classList.add('fire');
+    setTimeout(() => flashEl.classList.remove('fire'), 200);
+  }, 50);
+
+  // Music
+  music.volume = 0;
+  music.play().catch(() => {});
+  let vol = 0;
+  const fadeIn = setInterval(() => {
+    vol = Math.min(1, vol + 0.05);
+    music.volume = vol;
+    if (vol >= 1) clearInterval(fadeIn);
+  }, 80);
+  soundBtn.classList.add('visible');
+
+  // Hide envelope screen
+  envScreen.style.transition = 'opacity .3s';
+  envScreen.style.opacity = '0';
+  setTimeout(() => envScreen.style.display = 'none', 350);
+
+  // Open halves
+  setTimeout(() => {
+    envTop.classList.add('open');
+    envBottom.classList.add('open');
+    // Start stories after halves gone
+    setTimeout(() => {
+      envTop.style.display = 'none';
+      envBottom.style.display = 'none';
+      progressEl.style.display = 'flex';
+      goTo(0);
+    }, 700);
+  }, 600);
+}
+
+function goTo(idx) {
+  if (idx >= SLIDES.length) { showFinal(); return; }
+
+  // Update slides
+  document.querySelectorAll('.slide').forEach((s, i) => {
+    s.classList.remove('active');
+    if (i < idx) document.getElementById(`fill-${i}`).classList.add('done');
+    if (i > idx) { document.getElementById(`fill-${i}`).classList.remove('done'); document.getElementById(`fill-${i}`).style.width = '0%'; }
+  });
+  document.getElementById(`slide-${idx}`).classList.add('active');
+
+  // Progress
+  const fill = document.getElementById(`fill-${idx}`);
+  fill.classList.remove('done');
+  fill.style.transition = 'none';
+  fill.style.width = '0%';
+
+  current = idx;
+  elapsed = 0;
+  startProgress();
+}
+
+function startProgress() {
+  clearTimeout(timer);
+  const fill = document.getElementById(`fill-${current}`);
+  const remaining = DURATION - elapsed;
+  fill.style.transition = `width ${remaining}ms linear`;
+  fill.style.width = '100%';
+  progStart = Date.now();
+  timer = setTimeout(() => goTo(current + 1), remaining);
+}
+
+function pauseProgress() {
+  if (holding) return;
+  holding = true;
+  clearTimeout(timer);
+  const fill = document.getElementById(`fill-${current}`);
+  const computed = parseFloat(getComputedStyle(fill).width);
+  const total = fill.parentElement.offsetWidth;
+  elapsed += (Date.now() - progStart);
+  fill.style.transition = 'none';
+  fill.style.width = (elapsed / DURATION * 100) + '%';
+}
+
+function resumeProgress() {
+  holding = false;
+  startProgress();
+}
+
+// Touch / click navigation
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+
+function onStart(x, y) {
+  touchStartX = x; touchStartY = y; touchStartT = Date.now();
+  holdTimer = setTimeout(pauseProgress, 150);
+}
+
+function onEnd(x, y) {
+  clearTimeout(holdTimer);
+  const dx = x - touchStartX;
+  const dy = y - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if (holding) { resumeProgress(); return; }
+  if (Math.abs(dy) > Math.abs(dx) * 1.5) return; // vertical swipe → ignore
+  if (Math.abs(dx) > 40) { dx > 0 ? prev() : next(); return; }
+  if (dt < 250) { x < window.innerWidth / 2 ? prev() : next(); }
+}
+
+document.getElementById('touch-left').addEventListener('mousedown', e => onStart(e.clientX, e.clientY));
+document.getElementById('touch-right').addEventListener('mousedown', e => onStart(e.clientX, e.clientY));
+document.addEventListener('mouseup', e => onEnd(e.clientX, e.clientY));
+document.addEventListener('touchstart', e => { const t = e.touches[0]; onStart(t.clientX, t.clientY); }, {passive:true});
+document.addEventListener('touchend', e => { const t = e.changedTouches[0]; onEnd(t.clientX, t.clientY); }, {passive:true});
+
+function next() { if (!started) return; goTo(current + 1); }
+function prev() { if (!started) return; goTo(Math.max(0, current - 1)); }
+
+// Sound toggle
+soundBtn.addEventListener('click', () => {
+  if (music.muted) {
+    music.muted = false;
+    iconOn.style.display = ''; iconOff.style.display = 'none';
+  } else {
+    music.muted = true;
+    iconOn.style.display = 'none'; iconOff.style.display = '';
+  }
+});
+
+// Final screen
+function showFinal() {
+  finalEl.classList.add('show');
+  progressEl.style.display = 'none';
+  document.getElementById('touch-left').classList.add('hidden');
+  document.getElementById('touch-right').classList.add('hidden');
+  initParticles();
+}
+
+// Particles
+function initParticles() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = Array.from({length: 80}, () => ({
+    x: Math.random() * canvas.width,
+    y: canvas.height + Math.random() * 100,
+    r: Math.random() * 2.5 + .5,
+    speed: Math.random() * 1.2 + .4,
+    opacity: Math.random() * .7 + .3,
+    drift: (Math.random() - .5) * .5,
+  }));
+
+  function frame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.y -= p.speed;
+      p.x += p.drift;
+      if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(220,180,80,${p.opacity})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+// Hide progress until started
+progressEl.style.display = 'none';
+</script>
+</body>
+</html>
